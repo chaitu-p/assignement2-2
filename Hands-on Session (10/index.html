@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stroke Prediction</title>
+</head>
+<body>
+    <h1>Stroke Prediction</h1>
+    <form id="predictionForm">
+        <label for="age">Age:</label><br>
+        <input type="text" id="age" name="age"><br>
+        <label for="hypertension">Hypertension:</label><br>
+        <input type="text" id="hypertension" name="hypertension"><br>
+        <label for="heart_disease">Heart Disease:</label><br>
+        <input type="text" id="heart_disease" name="heart_disease"><br>
+        <label for="avg_glucose_level">Average Glucose Level:</label><br>
+        <input type="text" id="avg_glucose_level" name="avg_glucose_level"><br>
+        <label for="bmi">BMI:</label><br>
+        <input type="text" id="bmi" name="bmi"><br>
+        <label for="smoking_status">Smoking Status:</label><br>
+        <input type="text" id="smoking_status" name="smoking_status"><br><br>
+        <input type="button" value="Predict" onclick="makePrediction()">
+    </form>
+    <p id="result"></p>
+
+    <script>
+        function makePrediction() {
+            const formData = {
+                age: document.getElementById('age').value,
+                hypertension: document.getElementById('hypertension').value,
+                heart_disease: document.getElementById('heart_disease').value,
+                avg_glucose_level: document.getElementById('avg_glucose_level').value,
+                bmi: document.getElementById('bmi').value,
+                smoking_status: document.getElementById('smoking_status').value
+            };
+
+            fetch('/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerHTML = `
+                    Stroke Risk Prediction: ${data.stroke_prediction}<br>
+                    Recommendation: ${JSON.stringify(data.recommendation)}
+                `;
+            });
+        }
+    </script>
+</body>
+</html>
